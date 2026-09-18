@@ -101,7 +101,7 @@ describe("User Login Endpoint", () => {
     );
 
     expect(loginResponse.status).toBe(200);
-    const body = await loginResponse.json();
+    const body = (await loginResponse.json()) as { data: string };
     expect(body.data).toBeDefined();
     // Validate UUID format
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

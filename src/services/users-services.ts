@@ -49,11 +49,10 @@ export async function loginUser(payload: LoginUserPayload) {
     .where(eq(users.email, payload.email))
     .limit(1);
 
-  if (existingUsers.length === 0) {
+  const user = existingUsers[0];
+  if (!user) {
     throw new Error("Email atau password salah");
   }
-
-  const user = existingUsers[0];
 
   // 2. Verify password
   const isPasswordValid = await Bun.password.verify(
