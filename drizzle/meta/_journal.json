@@ -8,6 +8,13 @@
       "when": 1789738041490,
       "tag": "0000_mushy_mongu",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1789739646290,
+      "tag": "0001_bored_tiger_shark",
+      "breakpoints": true
     }
   ]
 }

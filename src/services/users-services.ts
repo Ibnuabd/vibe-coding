@@ -1,9 +1,14 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { users, type NewUser } from "../db/schema";
+import { users, sessions, type NewUser } from "../db/schema";
 
 export interface RegisterUserPayload {
   name: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginUserPayload {
   email: string;
   password: string;
 }
@@ -35,3 +40,41 @@ export async function registerUser(payload: RegisterUserPayload) {
 
   return { data: "OK" };
 }
+
+export async function loginUser(payload: LoginUserPayload) {
+  // 1. Check if user exists
+  const existingUsers = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, payload.email))
+    .limit(1);
+
+  if (existingUsers.length === 0) {
+    throw new Error("Email atau password salah");
+  }
+
+  const user = existingUsers[0];
+
+  // 2. Verify password
+  const isPasswordValid = await Bun.password.verify(
+    payload.password,
+    user.password,
+    "bcrypt"
+  );
+
+  if (!isPasswordValid) {
+    throw new Error("Email atau password salah");
+  }
+
+  // 3. Generate session token
+  const token = crypto.randomUUID();
+
+  // 4. Save session to database
+  await db.insert(sessions).values({
+    token,
+    user_id: user.id,
+  });
+
+  return { data: token };
+}
+
