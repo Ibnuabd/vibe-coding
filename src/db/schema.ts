@@ -4,7 +4,8 @@ export const users = mysqlTable("users", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  password: varchar("password", { length: 255 }).notNull(),
+  create_at: timestamp("create_at").defaultNow().notNull(),
 });
 
 export type User = typeof users.$inferSelect;
