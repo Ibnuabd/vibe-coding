@@ -1,32 +1,62 @@
 import { Elysia, t } from "elysia";
-import { registerUser } from "../services/users-services";
+import { registerUser, loginUser } from "../services/users-services";
 
-export const usersRoute = new Elysia({ prefix: "/api/users" }).post(
-  "/register",
-  async ({ body, set }) => {
-    try {
-      const result = await registerUser(body);
-      set.status = 201;
-      return result;
-    } catch (error: any) {
-      if (error.message === "Email sudah terdaftar") {
-        set.status = 400;
+export const usersRoute = new Elysia({ prefix: "/api/users" })
+  .post(
+    "/register",
+    async ({ body, set }) => {
+      try {
+        const result = await registerUser(body);
+        set.status = 201;
+        return result;
+      } catch (error: any) {
+        if (error.message === "Email sudah terdaftar") {
+          set.status = 400;
+          return {
+            error: "Email sudah terdaftar",
+          };
+        }
+
+        set.status = 500;
         return {
-          error: "Email sudah terdaftar",
+          error: error.message || "Internal server error",
         };
       }
-
-      set.status = 500;
-      return {
-        error: error.message || "Internal server error",
-      };
+    },
+    {
+      body: t.Object({
+        name: t.String(),
+        email: t.String(),
+        password: t.String(),
+      }),
     }
-  },
-  {
-    body: t.Object({
-      name: t.String(),
-      email: t.String(),
-      password: t.String(),
-    }),
-  }
-);
+  )
+  .post(
+    "/login",
+    async ({ body, set }) => {
+      try {
+        const result = await loginUser(body);
+        set.status = 200;
+        return result;
+      } catch (error: any) {
+        if (error.message === "Email atau password salah") {
+          set.status = 400;
+          return {
+            error: "Email atau password salah",
+          };
+        }
+
+        set.status = 500;
+        return {
+          error: error.message || "Internal server error",
+        };
+      }
+    },
+    {
+      body: t.Object({
+        email: t.String(),
+        password: t.String(),
+      }),
+    }
+  );
+
