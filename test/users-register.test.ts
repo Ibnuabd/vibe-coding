@@ -20,4 +20,20 @@ describe("User Registration Endpoint", () => {
 
     expect(response.status).toBeGreaterThanOrEqual(400);
   });
+
+  it("should validate input schema - return 422 if name exceeds 255 characters", async () => {
+    const response = await app.handle(
+      new Request("http://localhost/api/users/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: "A".repeat(300),
+          email: "valid@localhost",
+          password: "password123",
+        }),
+      })
+    );
+
+    expect(response.status).toBe(422);
+  });
 });
