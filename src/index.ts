@@ -11,6 +11,17 @@ const app = new Elysia()
           version: "1.0.0",
           description: "Dokumentasi API untuk aplikasi Vibe Coding",
         },
+        components: {
+          securitySchemes: {
+            bearerAuth: {
+              type: "http",
+              scheme: "bearer",
+              bearerFormat: "UUID",
+              description:
+                "Masukkan token sesi yang didapatkan dari endpoint login",
+            },
+          },
+        },
       },
     })
   )

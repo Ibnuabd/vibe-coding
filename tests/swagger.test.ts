@@ -25,16 +25,32 @@ describe("Swagger Documentation Endpoint", () => {
     expect(html).toContain("swagger");
   });
 
-  it("should serve OpenAPI specification at /swagger/json", async () => {
+  it("should serve OpenAPI specification at /swagger/json with response body examples", async () => {
     const response = await app.handle(
       new Request("http://localhost/swagger/json")
     );
     expect(response.status).toBe(200);
     const json: any = await response.json();
     expect(json.info.title).toBe("Vibe Coding User API");
-    expect(json.paths["/api/users/register"]).toBeDefined();
-    expect(json.paths["/api/users/login"]).toBeDefined();
-    expect(json.paths["/api/users/current"]).toBeDefined();
-    expect(json.paths["/api/users/logout"]).toBeDefined();
+
+    // Check register responses
+    const registerResponses = json.paths["/api/users/register"].post.responses;
+    expect(registerResponses["201"].content["application/json"].example).toEqual({ data: "OK" });
+    expect(registerResponses["400"].content["application/json"].example).toEqual({ error: "Email sudah terdaftar" });
+
+    // Check login responses
+    const loginResponses = json.paths["/api/users/login"].post.responses;
+    expect(loginResponses["200"].content["application/json"].example.data).toBeDefined();
+    expect(loginResponses["400"].content["application/json"].example).toEqual({ error: "Email atau password salah" });
+
+    // Check current responses
+    const currentResponses = json.paths["/api/users/current"].get.responses;
+    expect(currentResponses["200"].content["application/json"].example.data.name).toBe("John Doe");
+    expect(currentResponses["401"].content["application/json"].example).toEqual({ error: "Unauthorized" });
+
+    // Check logout responses
+    const logoutResponses = json.paths["/api/users/logout"].delete.responses;
+    expect(logoutResponses["200"].content["application/json"].example).toEqual({ data: "OK" });
+    expect(logoutResponses["401"].content["application/json"].example).toEqual({ error: "Unauthorized" });
   });
 });
