@@ -56,6 +56,7 @@ Aplikasi menggunakan database MySQL/MariaDB dengan 2 tabel utama:
 - **Runtime & Package Manager**: [Bun](https://bun.sh/) (Cepat, *all-in-one* toolkit).
 - **Bahasa Pemrograman**: TypeScript.
 - **Web Framework**: [ElysiaJS](https://elysiajs.com/) (Web framework yang sangat cepat dan teroptimasi untuk Bun).
+- **API Documentation**: `@elysiajs/swagger` (Swagger UI & OpenAPI specification).
 - **Database ORM**: [Drizzle ORM](https://orm.drizzle.team/) (Type-safe ORM).
 - **Database Driver**: `mysql2` untuk koneksi ke database MySQL.
 - **Testing**: `bun:test` (Test runner bawaan Bun).
@@ -88,6 +89,16 @@ Aplikasi menggunakan database MySQL/MariaDB dengan 2 tabel utama:
    Untuk menjalankan mode production:
    ```bash
    bun run start
+   ```
+
+5. **Dokumentasi API Interaktif (Swagger UI)**:
+   Saat server sedang berjalan, Anda dapat membuka dan menguji API secara interaktif melalui antarmuka Swagger pada browser di:
+   ```text
+   http://localhost:3000/swagger
+   ```
+   Spesifikasi OpenAPI dalam format JSON juga dapat diakses di:
+   ```text
+   http://localhost:3000/swagger/json
    ```
 
 ## 🧪 Cara Testing Aplikasi
